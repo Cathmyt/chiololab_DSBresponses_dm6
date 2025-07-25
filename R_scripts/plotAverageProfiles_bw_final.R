@@ -211,7 +211,7 @@ setwd("/Users/antienna/Documents/USC/ChioloLab/chiololab_DSBresponses_dm6/R_scri
 seqlens <- read_genome_lengths(BSgenome.Dmelanogaster.UCSC.dm6)
 
 # Parameters
-upstream <- 1000; downstream <- 1000; binsize <- 50; smoothsize <- 250
+upstream <- 5000; downstream <- 5000; binsize <- 50; smoothsize <- 250
 y_label <- "normalized read counts"; x_label <- "Positions relative to cut sites (bp)"
 zoom_above_zero <- TRUE; smooth_cut_for_strandsep <- FALSE; y_upper_lim <- NA; filling <- TRUE
 plotSDbtwBed <- FALSE; plotEBwithinBed <- NULL # NULL/"SD"/"SEM"
