@@ -169,7 +169,7 @@ read_length <- function(fasta_index) {
 seqlens <- seqlengths(BSgenome.Dmelanogaster.UCSC.dm6)
 # seqlens <- read_length("~/wdir/Cathy/reference_genomes/hg19.fa.fai")
 
-chipseq_file <- c(
+bw_files <- c(
   "../example_files/bw_files/END_seq_rep1_A40A39_5hrVsUNT_bwa_aligned_PE_SES_wdup.bw",
   "../example_files/bw_files/END_seq_ExoVII_5hrVsUNT_A74A73_bwa_aligned_PE_SES_wdup.bw",
   "../example_files/bw_files/END_seq_rep1_A40A39_5hrVsUNT_bwa_aligned_PE_SES_wdup.bw",
@@ -192,15 +192,15 @@ boxcenter_noMedian <- TRUE
 show_pval_numeric <- TRUE
 
 # ----------------- Main -------------------
-dir.create("plots", showWarnings = FALSE)
+dir.create("../plots", showWarnings = FALSE)
 
 results <- data.frame()  # container for all computed signals
 
 for (window_size in window_sizes) {
   timestamp_message("Processing window size: ", window_size)
   
-  for (i in seq_along(chipseq_file)) {
-    bw    <- chipseq_file[i]
+  for (i in seq_along(bw_files)) {
+    bw    <- bw_files[i]
     bed   <- bed_files[i]
     label <- group_labels[i]
     

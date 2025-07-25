@@ -1,7 +1,7 @@
 #!/usr/bin/env Rscript
 
 # ============================================================
-# Boxplots of ChIP/ATAC signal around BED sites from bigWig(s)
+# Boxplots of ChIP signal around BED sites from bigWig(s)
 # ============================================================
 # This script:
 #   1) Reads a set of BED files (groups) and a list of bigWig files (replicates/conditions)
@@ -246,7 +246,7 @@ bed_files      <- c("../example_files/bed_files/EU_42DSBs.bed",
                     "../example_files/bed_files/FHC_10DSBs.bed")
 group_labels   <- c("EU", "HC", "FHC")
 
-chipseq_files  <- list(
+bw_files  <- list(
   c("../example_files/bw_files/END_seq_ExoVII_5hrVsUNT_A74A73_bwa_aligned_PE_SES_wdup.bw",
     "../example_files/bw_files/END_seq_HO_rep2_B23B24_5hrVsUNT_bwa_aligned_PE_SES_wdup.bw",
     "../example_files/bw_files/END_seq_rep1_A40A39_5hrVsUNT_bwa_aligned_PE_SES_wdup.bw"),
@@ -267,14 +267,14 @@ show_pval_numeric  <- TRUE
 
 # ----------------- Main -------------------------
 
-dir.create("plots", showWarnings = FALSE)
+dir.create("../plots", showWarnings = FALSE)
 
 all_plots <- list()
 
 for (window_size in window_sizes) {
-  for (i in seq_along(chipseq_files)) {
+  for (i in seq_along(bw_files)) {
 
-    bw_group    <- chipseq_files[[i]]
+    bw_group    <- bw_files[[i]]
     title_label <- title_labels[i]
 
     # compute signal for each bw replicate/file in group
