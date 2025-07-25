@@ -204,7 +204,7 @@ plot_average_profile_bw <- function(bed_files, bw_files, binsize, smoothsize, up
 
 
 # ----------------- User Config -------------------
-setwd("/Users/antienna/Documents/USC/ChioloLab/chiololab_DSBresponses_dm6/R_scripts")
+# setwd("/Users/antienna/Documents/USC/ChioloLab/chiololab_DSBresponses_dm6/R_scripts")
 
 # Reference genome: can be BSgenome object or FASTA .fai index
 # seqlens <- read_genome_lengths("~/ref/hg19.fa.fai")
