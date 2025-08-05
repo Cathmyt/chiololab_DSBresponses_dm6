@@ -184,7 +184,7 @@ plot_intersect_scatter <- function(site_bed_file, win_bed1_file, win_bed2_file,
                        end = end(filtered_sites),
                        X = X_avg,
                        Y = Y_avg)
-
+  message("Number of intersecting sites: ", nrow(df_all), " out of ", length(filtered_sites))
   # Regression
   lm_model <- linear_reg() %>% 
     set_engine('lm') %>% 
