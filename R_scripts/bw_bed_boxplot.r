@@ -116,7 +116,7 @@ compute_cov_chipseq <- function(bed_files, bw_file, window_size = 1000,
     timestamp_message("Processing ", set_label, " with ", basename(bw_file))
     signal <- overlap_bw(bed_file, bw_file, window_size, funct, seqlens)
     res[[i]] <- data.frame(Set = set_label,
-                           label = gsub("[0-9]+", "", set_label),
+                           label = sub("^\\d+", "", set_label),
                            bwReads = signal,
                            stringsAsFactors = FALSE)
   }
