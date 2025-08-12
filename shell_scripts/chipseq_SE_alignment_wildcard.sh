@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -euo pipefail
+
 eval "$(conda shell.bash hook)"
 
 # ===========================================================
@@ -42,7 +42,6 @@ validate_env() {
 # ============================
 # Main
 # ============================
-shopt -s nullglob
 for FILE in *.fastq *.fq *.fastq.gz *.fq.gz; do
     [ -e "$FILE" ] || continue
 
