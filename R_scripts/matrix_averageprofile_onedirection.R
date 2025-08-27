@@ -27,15 +27,26 @@ load_matrix_body <- function(file_path) {
 }
 
 # ---- Process full matrix into (n_replicates x bins) ----
-process_matrix <- function(mat, upstream, downstream, binsize) {
+process_matrix <- function(mat, upstream, downstream, binsize, drop_idx = NULL) {
   n_bins <- (upstream + downstream) / binsize
   total_cols <- ncol(mat)
   n_reps <- total_cols / n_bins
   stopifnot(total_cols %% n_bins == 0)
-  row_avg <- colMeans(mat)
-  reshaped <- matrix(row_avg, nrow = n_reps, byrow = TRUE)
+  
+  # Reshape into replicates
+  reshaped <- matrix(NA, nrow = n_reps, ncol = n_bins)
+  for (i in 1:n_reps) {
+    reshaped[i, ] <- colMeans(mat[ , ((i-1)*n_bins + 1):(i*n_bins)], na.rm = TRUE)
+  }
+  
+  # Drop specified replicates
+  if (!is.null(drop_idx)) {
+    reshaped <- reshaped[-drop_idx, , drop = FALSE]
+  }
+  
   return(reshaped)
 }
+
 
 # ---- Flip left matrix and average with right ----
 merge_left_right <- function(left_mat, right_mat) {
@@ -81,7 +92,8 @@ plot_multiple_profiles <- function(results_list, binsize, upstream, group_labels
 }
 
 # ---- Main Wrapper ----
-run_profile_plot <- function(matrix_files, group_labels, color_mapping, smooth_bp = 0, zoom_above_zero = FALSE, title = "Merged One-Directional Profiles") {
+run_profile_plot <- function(matrix_files, group_labels, color_mapping, smooth_bp = 0,
+                               zoom_above_zero = TRUE, title = "Merged One-Directional Profiles", drop_reps = list()) {
   results_list <- list()
   
   for (i in seq_along(matrix_files)) {
@@ -106,8 +118,15 @@ run_profile_plot <- function(matrix_files, group_labels, color_mapping, smooth_b
     left_mat <- load_matrix_body(left_file)
     right_mat <- load_matrix_body(right_file)
     
-    left_proc <- process_matrix(left_mat, left_meta$upstream, left_meta$downstream, left_meta$binsize)
-    right_proc <- process_matrix(right_mat, right_meta$upstream, right_meta$downstream, right_meta$binsize)
+    # left_proc <- process_matrix(left_mat, left_meta$upstream, left_meta$downstream, left_meta$binsize)
+    # right_proc <- process_matrix(right_mat, right_meta$upstream, right_meta$downstream, right_meta$binsize)
+    left_proc <- process_matrix(left_mat, 
+                                left_meta$upstream, left_meta$downstream, left_meta$binsize, 
+                                drop_idx = drop_reps[[i]])
+    right_proc <- process_matrix(right_mat, 
+                                 right_meta$upstream, right_meta$downstream, right_meta$binsize, 
+                                 drop_idx = drop_reps[[i]])
+    
     
     merged <- merge_left_right(left_proc, right_proc)
     
@@ -132,6 +151,7 @@ matrix_files <- list(
   c("pH2Av_TRTvsUNT_SES_3reps_across55EU_-500kb.tab", "pH2Av_TRTvsUNT_SES_3reps_across55EU_+500kb.tab"),
   c("pH2Av_TRTvsUNT_SES_3reps_across15HC_-500kb.tab", "pH2Av_TRTvsUNT_SES_3reps_across15HC_+500kb.tab")
 )
+drop_reps <- list(c(3), c(3)) # Drop 3rd replicate from both groups
 group_labels <- c("55EU", "15HC")
 color_mapping <- c("55EU" = "dimgrey", "15HC" = "#F8766D")
 smooth_bp <- 5000
@@ -140,7 +160,7 @@ title <- "pH2Av avg profile, two sides merged"
 
 # Generate plot
 p <- run_profile_plot(matrix_files, group_labels, color_mapping, 
-                      smooth_bp, zoom_above_zero, title)
+                      smooth_bp, zoom_above_zero, title, drop_reps)
 p
 ggsave("one_directional_zoomAboveZero.pdf", p, width = 6, height = 4)
 
